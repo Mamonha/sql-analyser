@@ -1,15 +1,28 @@
 <?php
 
 class InjectionChecker {
-    public static function isVulnerable(string $query): bool {
-        $patterns = [
-            "/'.*--/", 
-            "/\b(UNION\b.*\bSELECT\b)/i",
-            "/\b(DROP\b|\bDELETE\b|\bINSERT\b)/i"
+    private string $query;
+    private array $suspiciousPatterns;
+ 
+    public function __construct(string $query) {
+        $this->query = trim($query);
+    }
+
+    public function isVulnerable(): bool {
+        $this->suspiciousPatterns = [
+            "/--|#/",
+
+            "/\b(UNION\s+SELECT)\b/i",
+            "/\b(DROP|DELETE|INSERT|UPDATE|REPLACE|TRUNCATE|ALTER)\b/i",
+
+            "/\b(OR|AND)\b\s+\d+=\d+/i",
+            "/\b(OR|AND)\b\s+['\"]?.+['\"]?\s*=\s*['\"]?.+['\"]?/i",
+
+            "/['\"]\s*(OR|AND)\s*['\"]?\d+=\d+/i",
         ];
-        
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $query)) {
+
+        foreach ($this->suspiciousPatterns as $pattern) {
+            if (preg_match($pattern, $this->query)) {
                 return true;
             }
         }
