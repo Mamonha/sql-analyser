@@ -15,4 +15,12 @@ class InjectionChecker {
         }
         return false;
     }
+
+    public function getSanitizedQuery(): string {
+        $sanitized = $this->query;
+        foreach ($this->suspiciousPatterns as $pattern) {
+            $sanitized = preg_replace($pattern,'',$sanitized);
+        }
+        return trim($sanitized);
+    }
 }
