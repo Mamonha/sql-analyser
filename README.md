@@ -9,25 +9,39 @@ Ferramenta para desenvolvedores que precisam:
 - Detectar vulnerabilidades de SQL Injection
 - Sugerir otimizações baseadas em `EXPLAIN ANALYZE`
 
-## ⚡ Features
-
-### 🔒 Segurança
-- Detecção de padrões de SQL Injection
-- Análise de queries suspeitas
-- Sugestão de prepared statements
-
-### ⚡ Performance
-- Benchmark de tempo de execução
-- Análise com `EXPLAIN ANALYZE`
-- Recomendação de índices faltantes
-
-### 📊 Visualização
-- Relatório de queries problemáticas
-- Comparativo antes/depois das otimizações
-- Histórico de performance
-
 ## 🛠️ Tecnologias
 
 - **PHP 8.2+** (PDO, MySQLi)
 - **MySQL 8.0** (EXPLAIN ANALYZE)
 - **Docker** (ambiente isolado)
+
+## 🚀 Endpoints
+
+### 1. `/api/analyze`
+
+> Analisa uma query SQL do tipo `SELECT` e retorna sugestões de otimização (caso existam).
+
+- **Método:** `POST`
+- **Content-Type:** `application/json`
+
+#### 📥 Exemplo de Requisição:
+
+```bash
+curl -X POST http://localhost/api/analyze \
+     -H "Content-Type: application/json" \
+     -d '{"query": "SELECT * FROM users WHERE id = 1"}'
+```
+### 2. `/api/checker`
+
+> Verifica se uma query SQL possui padrões de SQL Injection ou comandos maliciosos.
+
+- **Método:** `POST`
+- **Content-Type:** `application/json`
+
+#### 📥 Exemplo de Requisição:
+
+```bash
+curl -X POST http://localhost/api/checker \
+     -H "Content-Type: application/json" \
+     -d '{"query": "SELECT * FROM users WHERE username = '\''admin'\'' OR '\''1'\''='\''1'\'' --"}'
+```
